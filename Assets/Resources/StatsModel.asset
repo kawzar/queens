@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e09909af4a518554595ba3e1222fa533, type: 3}
+  m_Name: StatsModel
+  m_EditorClassIdentifier: 
+  minEconomy: 0
+  maxEconomy: 100
+  minPopularity: 0
+  maxPopularity: 100
+  minMusic: 0
+  maxMusic: 100
+  swipeEvents:
+  - {fileID: 11400000, guid: 4e0404bed4c27e44dbbb41da3e5d3365, type: 2}
+  - {fileID: 11400000, guid: a3d587c2eb72961419cfa57e5d8b26ac, type: 2}
