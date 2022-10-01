@@ -15,10 +15,13 @@ namespace Kawzar.Queens.View
       [SerializeField] private float animationPositionThreshold = 20f;
       [SerializeField] private float animationRotationModule = 3.75f;
       [SerializeField] private float animationScale = 1.5f;
+      [SerializeField] private float spawnAnimationEndValue = 255f;
+      [SerializeField] private float spawnAnimationDuration = 1.25f;
+      [SerializeField] private float swipeAnimationEndValue = 255f;
+      [SerializeField] private float swipeAnimationDuration = 0.75f;
 
       private bool _isDragging = false;
       private Vector3 _initialScale;
-      private Vector3 _initialPosition;
 
       public event Action SwipeLeft;
       public event Action SwipeRight;
@@ -27,8 +30,15 @@ namespace Kawzar.Queens.View
       {
          characterImage.sprite = sprite;
          this.text.SetText(text);
+         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
       }
-      
+
+      private void OnEnable()
+      {
+         transform.DOMoveY(spawnAnimationEndValue, spawnAnimationDuration)
+            .SetEase(Ease.InBounce);
+      }
+
       public void OnPointerMove(PointerEventData eventData)
       {
          if (_isDragging)
@@ -49,26 +59,26 @@ namespace Kawzar.Queens.View
          float xMovement = transform.position.x + eventData.delta.x;
          if (xMovement >= transform.position.x + animationPositionThreshold)
          {
-            Debug.Log("Swipe");
             SwipeRight?.Invoke();
+            transform.DOMoveX(transform.position.x + swipeAnimationEndValue, swipeAnimationDuration)
+               .SetEase(Ease.OutCubic)
+               .OnComplete(() => Destroy(gameObject));
          }
          else if (xMovement <= transform.position.x - animationPositionThreshold)
          {
-            Debug.Log("Swipe");
             SwipeLeft?.Invoke();
+            transform.DOMoveX(transform.position.x - swipeAnimationEndValue, swipeAnimationDuration)
+               .SetEase(Ease.OutCubic)
+               .OnComplete(() => Destroy(gameObject));
          }
          
-         transform.SetPositionAndRotation(_initialPosition, Quaternion.identity);
-         transform.DOMove(_initialPosition, 0.25f);
-         transform.DORotate(Vector3.zero, 0.25f);
-         transform.DOScale(_initialScale, 0.25f);
          _isDragging = false;
+         transform.DOScale(_initialScale, 0.25f);
       }
 
       public void OnPointerDown(PointerEventData eventData)
       {
          _isDragging = true;
-         _initialPosition = transform.position;
          _initialScale = transform.localScale;
          transform.DOScale(_initialScale * animationScale, 0.25f);
       }
